@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 var mdeps = require('module-deps')
   , path = require('path')
-  , dir = process.argv[2] || '.'
-  , pkg = require(path.join(process.cwd(), dir, 'package.json'))
-  , file = path.join(process.cwd(), dir, pkg.main || pkg.bin)
+  , dir = path.join(process.cwd(), process.argv[2] || '.')
+  , pkg = require(path.join(dir, 'package.json'))
+  , file = path.join(dir, pkg.main || pkg.bin)
   , topiary = require('topiary')
   , shapeFn = function (o) { return o.name; };
 
