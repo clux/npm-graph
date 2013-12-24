@@ -9,7 +9,9 @@
   },
   "keywords": [
     "npm ls",
-    "browserify"
+    "browserify",
+    "dependencies",
+    "analysis"
   ],
   "bin": "npm-graph.js",
   "dependencies": {
