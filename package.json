@@ -1,0 +1,20 @@
+{
+  "name": "npm-graph",
+  "description": "Prints a dependency graph of modules that is actually required",
+  "author": "Eirik Albrigtsen <analsandblaster@gmail.com>",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "clux/npm-graph"
+  },
+  "keywords": ["npm ls", "browserify"],
+  "bin": "npm-graph.js",
+  "dependencies": {
+    "module-deps": "~1.1.0",
+    "topiary": "0.0.1"
+  },
+  "bugs": {
+    "url": "http://github.com/clux/npm-graph/issues"
+  },
+  "license": "MIT"
+}
