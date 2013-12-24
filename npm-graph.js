@@ -10,10 +10,20 @@ if (path.extname(dir) === '.js') { // either we need the specific entry point
   file = dir;
   name = path.basename(dir).replace(/(\.js)/, "");
 }
-else { // or we get a directory which we infer the entry point of
+else { // or we get a directory which we try to infer the entry point of
   var pkg = require(path.join(dir, 'package.json'));
-  file = path.join(dir, pkg.main || pkg.bin);
   name = pkg.name;
+  var entry = pkg.main || pkg.bin;
+  if (Object(entry) === entry && Object.keys(entry).length) {
+    entry = entry[Object.keys(entry)[0]]; // assume first key is sensible
+  }
+
+  if (entry + '' !== entry) { // verify what we got is a string
+    var reason = "Failed to find the entry point of " + name;
+    reason += " - try specifying it directly";
+    throw new Error(reason);
+  }
+  file = path.join(dir, entry);
 }
 
 var coreModules = ['assert', 'buffer', 'child_process', 'cluster',
@@ -21,28 +31,26 @@ var coreModules = ['assert', 'buffer', 'child_process', 'cluster',
   'os', 'path', 'punycode', 'querystring', 'readline', 'repl', 'stream',
   'string_decoder', 'tls', 'tty', 'url', 'util', 'vm', 'zlib'];
 
-var opts = {
+var stream = mdeps(file, {
   filter: function (id) {
     return coreModules.indexOf(id) < 0;
   }
-};
+});
 
-var depList = {};
-mdeps(file, opts).on('data', function (o) {
-  depList[o.id] = o.deps;
+var allDeps = {};
+stream.on('data', function (o) {
+  allDeps[o.id] = o.deps;
 }).on('end', function () {
-  //console.log(depList);
+  var topTree = { name: name };
   var traverse = function (depObj, loc) {
     loc.deps = {};
     Object.keys(depObj).forEach(function (key) {
       if (path.normalize(key) === key) { // ignore local dependencies
         loc.deps[key] = { name: key };
-        traverse(depList[depObj[key]] || {}, loc.deps[key]);
+        traverse(allDeps[depObj[key]] || {}, loc.deps[key]);
       }
     });
   };
-  var topTree = { name: name };
-  traverse(depList[file], topTree);
-
+  traverse(allDeps[file], topTree);
   console.log(topiary(topTree, 'deps', shapeFn));
 });

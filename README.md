@@ -2,7 +2,7 @@
 `npm ls`, but without dependencies that are not explicitly required
 
 ## Usage
-Install globally and give it a path to a locally installed package to analyze:
+Install globally and give it a path to a _local_ package or a file:
 
 ```bash
 $ npm install -g npm-graph
@@ -11,7 +11,7 @@ $ npm-graph groupstage-tb/
 
 Output:
 
-```
+```bash
 groupstage-tb
  ├──┬groupstage
  │  ├──┬tournament
@@ -53,3 +53,6 @@ groupstage-tb
  └──┬tourney
     └───autonomy
 ```
+
+## License
+MIT-Licensed. See LICENSE file for details.
