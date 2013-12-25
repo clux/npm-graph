@@ -60,5 +60,7 @@ mdeps(file, { filter: isNotBuiltin }).on('data', function (o) {
     });
   };
   traverse(allDeps[file], topTree);
-  console.log(topiary(topTree, 'deps', shapeFn));
+
+  var filterFn = function (o) { return isNotBuiltin(o.name); };
+  console.log(topiary(topTree, 'deps', shapeFn, filterFn));
 });
