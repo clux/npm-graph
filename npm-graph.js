@@ -48,7 +48,7 @@ mdeps(file, { filter: isNotBuiltin }).on('data', function (o) {
   var traverse = function (depObj, loc) {
     loc.deps || (loc.deps = {});
     Object.keys(depObj).forEach(function (key) {
-      if (path.normalize(key) !== key) {
+      if (['\\', '/', '.'].indexOf(key[0]) >= 0) {
         // keep local deps private, but keep inspecting them for modules
         traverse(allDeps[depObj[key]] || {}, loc);
       }
