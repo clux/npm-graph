@@ -13,7 +13,8 @@
     "dependencies",
     "analysis"
   ],
-  "bin": "npm-graph.js",
+  "main": "npm-graph.js",
+  "bin": "bin.js",
   "dependencies": {
     "module-deps": "~1.1.0",
     "topiary": "0.0.1"
