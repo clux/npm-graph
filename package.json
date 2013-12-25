@@ -15,9 +15,15 @@
   ],
   "main": "npm-graph.js",
   "bin": "bin.js",
+  "scripts": {
+    "test": "tap test/*.js"
+  },
   "dependencies": {
     "module-deps": "~1.1.0",
     "topiary": "0.0.1"
+  },
+  "devDependencies": {
+    "tap": "~0.4.6"
   },
   "bugs": {
     "url": "http://github.com/clux/npm-graph/issues"
