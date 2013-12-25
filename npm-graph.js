@@ -6,6 +6,7 @@ var mdeps = require('module-deps')
   , dir = path.join(process.cwd(), process.argv[2] || '.')
   , name, file;
 
+// 1. resolve entry point
 if (path.extname(dir) === '.js') { // either we need the specific entry point
   file = dir;
   name = path.basename(dir).replace(/(\.js)/, "");
@@ -26,26 +27,33 @@ else { // or we get a directory which we try to infer the entry point of
   file = path.join(dir, entry);
 }
 
+// 2. resolve non-core dependencies
 var coreModules = ['assert', 'buffer', 'child_process', 'cluster',
   'crypto', 'dgram', 'dns', 'events', 'fs', 'http', 'https', 'net',
   'os', 'path', 'punycode', 'querystring', 'readline', 'repl', 'stream',
   'string_decoder', 'tls', 'tty', 'url', 'util', 'vm', 'zlib'];
 
-var stream = mdeps(file, {
-  filter: function (id) {
-    return coreModules.indexOf(id) < 0;
-  }
-});
+var isNotBuiltin = function (id) {
+  return coreModules.indexOf(id) < 0;
+};
 
 var allDeps = {};
-stream.on('data', function (o) {
+mdeps(file, { filter: isNotBuiltin }).on('data', function (o) {
   allDeps[o.id] = o.deps;
 }).on('end', function () {
+  //console.log(JSON.stringify(allDeps, null, '\t'));
+
+  // 3. build a dependency tree from the flat mdeps list by recursing
   var topTree = { name: name };
   var traverse = function (depObj, loc) {
-    loc.deps = {};
+    loc.deps || (loc.deps = {});
     Object.keys(depObj).forEach(function (key) {
-      if (path.normalize(key) === key) { // ignore local dependencies
+      if (path.normalize(key) !== key) {
+        // keep local deps private, but keep inspecting them for modules
+        traverse(allDeps[depObj[key]] || {}, loc);
+      }
+      else {
+        // put new modules under new headers under current location
         loc.deps[key] = { name: key };
         traverse(allDeps[depObj[key]] || {}, loc.deps[key]);
       }
