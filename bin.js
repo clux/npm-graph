@@ -2,7 +2,7 @@
 var graph = require('./npm-graph')
   , argv = require('minimist')(process.argv.slice(2))
   , path = require('path')
-  , dir = path.join(process.cwd(), process.argv[2] || '.')
+  , dir = path.join(process.cwd(), argv._[0] || '.')
   , name, file;
 
 // resolve entry point dynamically
