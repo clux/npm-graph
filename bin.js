@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var graph = require('./npm-graph')
+  , argv = require('minimist')(process.argv.slice(2))
   , path = require('path')
   , dir = path.join(process.cwd(), process.argv[2] || '.')
   , name, file;
@@ -7,7 +8,7 @@ var graph = require('./npm-graph')
 // resolve entry point dynamically
 if (path.extname(dir) === '.js') { // either we got the specific entry point
   file = dir;
-  name = path.basename(dir).replace(/(\.js)/, "");
+  name = path.basename(dir);
 }
 else { // or we got a directory which we try to infer the entry point of
   var pkg = require(path.join(dir, 'package.json'));
@@ -30,4 +31,4 @@ graph(file, name, function (err, str) {
     throw err;
   }
   console.log(str);
-});
+}, { showLocal: Boolean(argv.l), showBuiltins: Boolean(argv.b) });

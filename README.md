@@ -10,52 +10,27 @@ Install globally and give it a path to a _local_ package or a file:
 
 ```bash
 $ npm install -g npm-graph
-$ npm-graph groupstage-tb/
-```
 
-Output:
+# no arguments - npm modules only
+$ npm-graph irc-stream/
+irc-stream
+ └───irc
 
-```bash
-groupstage-tb
- ├──┬groupstage
- │  ├──┬tournament
- │  │  ├───events
- │  │  └──┬interlude
- │  │     ├───autonomy
- │  │     ├───operators
- │  │     └───subset
- │  ├───group
- │  ├──┬interlude
- │  │  ├───autonomy
- │  │  ├───operators
- │  │  └───subset
- │  └───roundrobin
- ├──┬tiebreaker
- │  ├──┬interlude
- │  │  ├───autonomy
- │  │  ├───operators
- │  │  └───subset
- │  ├──┬tournament
- │  │  ├───events
- │  │  └──┬interlude
- │  │     ├───autonomy
- │  │     ├───operators
- │  │     └───subset
- │  └──┬groupstage
- │     ├──┬interlude
- │     │  ├───autonomy
- │     │  ├───operators
- │     │  └───subset
- │     ├──┬tournament
- │     │  ├───events
- │     │  └──┬interlude
- │     │     ├───autonomy
- │     │     ├───operators
- │     │     └───subset
- │     ├───roundrobin
- │     └───group
- └──┬tourney
-    └───autonomy
+# show builtins
+$ npm-graph irc-stream/ -b
+irc-stream
+ ├──┬irc
+ │  ├───net
+ │  ├───tls
+ │  └───util
+ └───stream
+
+# show local files
+$ npm-graph irc-stream/ -l
+irc-stream
+ └──┬irc
+    ├───./codes
+    └───./colors
 ```
 
 ## License
