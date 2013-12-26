@@ -1,6 +1,6 @@
 var mdeps = require('module-deps')
   , topiary = require('topiary')
-  , shapeFn = function (o) { return o.name; };
+  , labeler = function (o) { return o.name; };
 
 // resolve non-core dependencies
 var coreModules = ['assert', 'buffer', 'child_process', 'cluster',
@@ -16,6 +16,10 @@ module.exports = function (file, name, cb, opts) {
   var allDeps = {};
   opts = opts || {};
 
+  var showInTree = function (o) {
+    return opts.showBuiltins || isNotBuiltin(o.name);
+  };
+
   mdeps(file, { filter: isNotBuiltin }).on('data', function (o) {
     allDeps[o.id] = o.deps;
   }).on('error', function (err) {
@@ -25,27 +29,22 @@ module.exports = function (file, name, cb, opts) {
     //console.log(JSON.stringify(allDeps, null, '\t'));
 
     // build a dependency tree from the flat mdeps list by recursing
-    var topTree = { name: name };
-    var traverse = function (depObj, loc) {
+    var traverse = function (currDeps, loc) {
       loc.deps = loc.deps || {};
-      Object.keys(depObj).sort().forEach(function (key) {
-        if (!opts.showLocal && ['\\', '/', '.'].indexOf(key[0]) >= 0) {
-          // keep local deps private, but keep inspecting them for modules
-          traverse(allDeps[depObj[key]] || {}, loc);
-        }
-        else {
-          // put new modules under new headers under current location
+      Object.keys(currDeps).sort().forEach(function (key) {
+        var isRecorded = (opts.showLocal || ['\\', '/', '.'].indexOf(key[0]) < 0);
+        if (isRecorded) {
+          // NB: !isRecorded => only inspect the file for recorded deps
           loc.deps[key] = { name: key };
-          traverse(allDeps[depObj[key]] || {}, loc.deps[key]);
         }
+        // recurse (!isRecorded => keep adding to previous location)
+        traverse(allDeps[currDeps[key]] || {}, isRecorded ? loc.deps[key] : loc);
       });
     };
-    traverse(allDeps[file], topTree);
+    var tree = { name: name };
+    traverse(allDeps[file], tree);
 
-    var filterFn = function (o) {
-      return opts.showBuiltins || isNotBuiltin(o.name);
-    };
-    cb(null, topiary(topTree, 'deps', shapeFn, filterFn));
+    cb(null, topiary(tree, 'deps', labeler, showInTree));
   });
 
 };
