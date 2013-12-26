@@ -18,6 +18,9 @@ module.exports = function (file, name, cb, opts) {
   try {
     mdeps(file, { filter: isNotBuiltin }).on('data', function (o) {
       allDeps[o.id] = o.deps;
+    }).on('error', function (err) {
+      // hopefully we can get these in the future without 'end' not happening
+      console.warn(err.message);
     }).on('end', function () {
       //console.log(JSON.stringify(allDeps, null, '\t'));
 
