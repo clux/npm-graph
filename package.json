@@ -2,7 +2,7 @@
   "name": "npm-graph",
   "description": "Prints a dependency graph of modules that is actually required",
   "author": "Eirik Albrigtsen <analsandblaster@gmail.com>",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "repository": {
     "type": "git",
     "url": "clux/npm-graph"
