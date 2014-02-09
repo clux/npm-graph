@@ -1,3 +1,7 @@
+0.3.2 / 2014-02-09
+==================
+  * module-deps upgraded to `1.4.2`
+
 0.3.1 / 2013-12-26
 ==================
   * `argv.b` can be used to additionally show builtins
