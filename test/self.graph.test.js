@@ -22,22 +22,6 @@ test("self main", function (t) {
         " │  ├───resolve",
         " │  └───through",
         " └───topiary"
-        //"npm-graph",
-        //" ├──┬module-deps",
-        //" │  ├──┬browser-resolve",
-        //" │  │  └───resolve",
-        //" │  ├──┬concat-stream",
-        //" │  │  └──┬bops",
-        //" │  │     ├───base64-js",
-        //" │  │     └───to-utf8",
-        //" │  ├──┬detective",
-        //" │  │  ├──┬escodegen",
-        //" │  │  │  └──┬source-map",
-        //" │  │  │     └───amdefine",
-        //" │  │  └───esprima",
-        //" │  ├───resolve",
-        //" │  └───through",
-        //" └───topiary"
       ],
       "graph of own deps"
     );
