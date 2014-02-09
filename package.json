@@ -19,7 +19,7 @@
     "test": "tap test/*.js"
   },
   "dependencies": {
-    "module-deps": "~1.1.0",
+    "module-deps": "~1.4.2",
     "topiary": "0.0.1",
     "minimist": "0.0.5"
   },
