@@ -21,7 +21,7 @@
   "dependencies": {
     "minimist": "0.0.5",
     "module-deps": "^2.1.5",
-    "topiary": "^1.0.0"
+    "topiary": "~1.0.1"
   },
   "devDependencies": {
     "tap": "~0.4.6"
