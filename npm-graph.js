@@ -13,7 +13,7 @@ var isNotBuiltin = function (id) {
 };
 
 module.exports = function (file, name, cb, opts) {
-  var allDeps = {};
+  var lookup = {};
   opts = opts || {};
 
   var showInTree = function (o) {
@@ -21,30 +21,36 @@ module.exports = function (file, name, cb, opts) {
   };
 
   mdeps(file, { filter: isNotBuiltin }).on('data', function (o) {
-    allDeps[o.id] = o.deps;
+    // o is object with `id` and `deps` = { relReq : id }
+    lookup[o.id] = Object.keys(o.deps).map(function (key) {
+      return { name: key, path: o.deps[key] };
+    });
   }).on('error', function (err) {
     // hopefully we can get these in the future without 'end' not happening
     console.warn(err.message);
   }).on('end', function () {
-    //console.log(JSON.stringify(allDeps, null, '\t'));
-
     // build a dependency tree from the flat mdeps list by recursing
     var traverse = function (currDeps, loc) {
-      loc.deps = loc.deps || {};
-      Object.keys(currDeps).sort().forEach(function (key) {
-        var isRecorded = (opts.showLocal || ['\\', '/', '.'].indexOf(key[0]) < 0);
+      loc.deps = loc.deps || [];
+      console.log('curr', currDeps, '&&&&&&&&&&&&&&&&')
+      currDeps.sort().forEach(function (obj) {
+        var key = obj.name
+          , children = lookup[obj.path]
+          , isRecorded = (opts.showLocal || ['\\', '/', '.'].indexOf(key[0]) < 0);
+
+        var res = isRecorded ? { name: key } : loc;
         if (isRecorded) {
           // NB: !isRecorded => only inspect the file for recorded deps
-          loc.deps[key] = { name: key };
+          loc.deps.push(res);
         }
         // recurse (!isRecorded => keep adding to previous location)
-        traverse(allDeps[currDeps[key]] || {}, isRecorded ? loc.deps[key] : loc);
+        traverse(lookup[obj.path] || [], res);
       });
     };
     var tree = { name: name };
-    traverse(allDeps[file], tree);
-
+    traverse(lookup[file], tree);
     cb(null, topiary(tree, 'deps', labeler, showInTree));
+    //console.log(JSON.stringify(tree, null, " "));
   });
 
 };
