@@ -1,0 +1,10 @@
+{
+  "name": "fake-package",
+  "version": "0.0.0",
+  "description": "A fake package",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "fake2": "latest"
+  }
+}
