@@ -1,6 +1,5 @@
 var mdeps = require('module-deps')
-  , topiary = require('topiary')
-  , labeler = function (o) { return o.name; };
+  , topiary = require('topiary');
 
 // resolve non-core dependencies
 var coreModules = ['assert', 'buffer', 'child_process', 'cluster',
@@ -12,20 +11,28 @@ var isNotBuiltin = function (id) {
   return coreModules.indexOf(id) < 0;
 };
 var isNotCoverage = function (id) {
-  return !(/\-cov\//).test(id);
+  return !(/\/\w*\-cov\//).test(id);
 };
+
 var isScannedForDeps = function (id) {
   return isNotBuiltin(id) && isNotCoverage(id);
 };
 
+var notCoveredInArray = function (ary, name) {
+  return ary.every(function (d) {
+    return d.name !== name;
+  });
+};
+
+
 module.exports = function (file, name, cb, opts) {
-  var lookup = {};
   opts = opts || {};
 
   var showInTree = function (o) {
     return (opts.showBuiltins || isNotBuiltin(o.name)) && isNotCoverage(o.name);
   };
 
+  var lookup = {};
   mdeps(file, { filter: isScannedForDeps }).on('data', function (o) {
     // o is object with `id` and `deps` = { relReq : id }
     lookup[o.id] = Object.keys(o.deps).map(function (key) {
@@ -33,32 +40,45 @@ module.exports = function (file, name, cb, opts) {
     });
   }).on('error', function (err) {
     // hopefully we can get these in the future without 'end' not happening
-    console.warn(err.message);
+    console.error(err.message);
   }).on('end', function () {
     // build a dependency tree from the flat mdeps list by recursing
-    var covered = []; // only cover unique paths once to avoid stack overflow
-    var traverse = function (currDeps, loc) {
+    var traversal = []; // TOOD: maybe we should only keep this list for when we dive
+    //but then we would need a list for each branch...
+    var traverse = function (currDeps, loc, level) {
       loc.deps = loc.deps || [];
-      currDeps.sort().forEach(function (obj) {
+      var covered = []; // only cover unique paths once to avoid stack overflow
+      currDeps.forEach(function (obj) {
         if (covered.indexOf(obj.path) < 0) {
+          covered.push(obj.path); // cover unique paths only once per level
+          traversal.unshift(obj.path || obj.name);
+
           var key = obj.name
-            , isRecorded = (opts.showLocal || ['\\', '/', '.'].indexOf(key[0]) < 0)
+            , isRelative = (['\\', '/', '.'].indexOf(key[0]) >= 0)
+            , notCovered = notCoveredInArray(loc.deps, key)
+            , isRecorded = (!isRelative || opts.showLocal) && notCovered
             , res = isRecorded ? { name: key } : loc;
+
+          if (level > 1000) {
+            var err = "About to stack-overflow - cyclical dependency likely:";
+            traversal.slice(0, 50).filter(isNotBuiltin).forEach(function (l, i) {
+              err += "\n\t" + i + " : " + l;
+            });
+            throw new Error(err);
+          }
 
           if (isRecorded) {
             // NB: !isRecorded => only inspect the file for recorded deps
             loc.deps.push(res);
           }
-          covered.push(obj.path);
+
           // recurse (!isRecorded => keep adding to previous location)
-          traverse(lookup[obj.path] || [], res);
+          traverse(lookup[obj.path] || [], res, level + 1);
         }
       });
     };
     var tree = { name: name };
-    traverse(lookup[file], tree);
-    cb(null, topiary(tree, 'deps', labeler, showInTree));
-    //console.log(JSON.stringify(tree, null, " "));
+    traverse(lookup[file], tree, 1);
+    cb(null, topiary(tree, 'deps', { filter: showInTree, sort: true }));
   });
-
 };

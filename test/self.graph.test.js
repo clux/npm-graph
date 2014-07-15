@@ -1,58 +1,53 @@
-var test = require('tap').test
-  , join = require('path').join
-  , graph = require('../');
+var graph = require('../');
+var join = require('path').join;
 
-test("self main", function (t) {
-  graph(join(__dirname, '..', 'npm-graph.js'), 'npm-graph', function (err, str) {
+exports.packages = function (t) {
+  graph(join(__dirname, 'fake-package', 'index.js'), 'fake-package', function (err, str) {
     t.ok(!err, 'worked');
     t.deepEqual(str.split('\n'), [
-        "npm-graph",
-        " ├──┬module-deps",
-        " │  ├──┬browser-resolve",
-        " │  │  └───resolve",
-        " │  ├──┬concat-stream",
-        " │  │  ├───inherits",
-        " │  │  ├──┬readable-stream",
-        " │  │  │  ├───core-util-is",
-        " │  │  │  ├───debuglog",
-        " │  │  │  └───string_decoder/",
-        " │  │  └───typedarray",
-        " │  ├───mine",
-        " │  ├───parents",
-        " │  ├───resolve",
-        " │  └───through",
-        " └───topiary"
+        "fake-package",
+        " └──fake2"
       ],
-      "graph of own deps"
+      "fake-package deps"
     );
-    t.end();
+    t.done();
   });
-});
+};
 
-test("self bin", function (t) {
-  graph(join(__dirname, '..', 'bin.js'), 'bin.js', function (err, str) {
+exports.showLocal = function (t) {
+  graph(join(__dirname, 'fake-package', 'index.js'), 'fake', function (err, str) {
     t.ok(!err, 'worked');
     t.deepEqual(str.split('\n'), [
-        "bin.js",
-        " ├──┬module-deps",
-        " │  ├──┬browser-resolve",
-        " │  │  └───resolve",
-        " │  ├──┬concat-stream",
-        " │  │  ├───inherits",
-        " │  │  ├──┬readable-stream",
-        " │  │  │  ├───core-util-is",
-        " │  │  │  ├───debuglog",
-        " │  │  │  └───string_decoder/",
-        " │  │  └───typedarray",
-        " │  ├───mine",
-        " │  ├───parents",
-        " │  ├───resolve",
-        " │  └───through",
-        " ├───topiary",
-        " └───minimist"
+        "fake",
+        " ├─┬./loc1",
+        " │ └─┬./loc3",
+        " │   └──fake2",
+        " ├─┬./loc2",
+        " │ ├─┬./loc1",
+        " │ │ └─┬./loc3",
+        " │ │   └──fake2",
+        " │ └──fake2",
+        " └─┬./loc3",
+        "   └──fake2"
       ],
-      "graph of own cli deps"
+      "local dependencies of fake-package"
     );
-    t.end();
-  });
-});
+    t.done();
+  }, { showLocal: true });
+};
+
+exports.entryPoint = function (t) {
+  graph(join(__dirname, 'fake-package', 'loc2.js'), 'loc2.js', function (err, str) {
+    t.ok(!err, 'worked');
+    t.deepEqual(str.split('\n'), [
+        "loc2.js",
+        " ├─┬./loc1",
+        " │ └─┬./loc3",
+        " │   └──fake2",
+        " └──fake2"
+      ],
+      "local dependencies of fake-package"
+    );
+    t.done();
+  }, { showLocal: true });
+};
