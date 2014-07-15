@@ -1,7 +1,10 @@
 # npm graph
-[![Build Status](https://secure.travis-ci.org/clux/npm-graph.png)](http://travis-ci.org/clux/npm-graph)
-[![Dependency Status](https://david-dm.org/clux/npm-graph.png)](https://david-dm.org/clux/npm-graph)
-[![unstable](http://hughsk.github.io/stability-badges/dist/unstable.svg)](http://nodejs.org/api/documentation.html#documentation_stability_index)
+[![npm status](http://img.shields.io/npm/v/npm-graph.svg)](https://www.npmjs.org/package/npm-graph)
+[![build status](https://secure.travis-ci.org/clux/npm-graph.svg)](http://travis-ci.org/clux/npm-graph)
+[![dependency status](https://david-dm.org/clux/npm-graph.svg)](https://david-dm.org/clux/npm-graph)
+[![coverage status](http://img.shields.io/coveralls/clux/npm-graph.svg)](https://coveralls.io/r/clux/npm-graph)
+[![unstable](http://img.shields.io/badge/stability-unstable-E5AE13.svg)](http://nodejs.org/api/documentation.html#documentation_stability_index)
+
 
 `npm ls`, but without dependencies that are not explicitly required
 
