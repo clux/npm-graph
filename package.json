@@ -13,18 +13,21 @@
     "dependencies",
     "analysis"
   ],
-  "main": "npm-graph.js",
+  "main": "index.js",
   "bin": "bin.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "$(npm bin)/nodeunit --reporter=verbose test/*.js",
+    "coveralls": "$(npm bin)/jscoverage lib && NPM_GRAPH_COV=1 $(npm bin)/nodeunit --reporter=lcov test | $(npm bin)/coveralls"
   },
   "dependencies": {
     "minimist": "0.0.5",
     "module-deps": "^2.1.5",
-    "topiary": "~1.0.1"
+    "topiary": "^1.1.1"
   },
   "devDependencies": {
-    "tap": "~0.4.6"
+    "nodeunit": "~0.9.0",
+    "jscoverage": "~0.5.4",
+    "coveralls": "~2.11.1"
   },
   "bugs": {
     "url": "http://github.com/clux/npm-graph/issues"
