@@ -2,6 +2,7 @@
 var graph = require('./npm-graph')
   , argv = require('minimist')(process.argv.slice(2))
   , path = require('path')
+  , fs = require('fs')
   , dir = path.join(process.cwd(), argv._[0] || '.')
   , name, file;
 
@@ -13,12 +14,9 @@ if (path.extname(dir) === '.js') { // either we got the specific entry point
 else { // or we got a directory which we try to infer the entry point of
   var pkg = require(path.join(dir, 'package.json'));
   name = pkg.name;
-  var entry = pkg.main || pkg.bin;
-  if (Object(entry) === entry && Object.keys(entry).length) {
-    entry = entry[Object.keys(entry)[0]]; // assume first key is sensible
-  }
+  var entry = pkg.main || 'index.js';
 
-  if (entry + '' !== entry) { // verify what we got is a string
+  if (!fs.existsSync(path.join(dir, entry))) {
     var reason = "Failed to find the entry point of " + name;
     reason += " - try specifying it directly";
     throw new Error(reason);
