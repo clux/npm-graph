@@ -5,6 +5,7 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "fake2": "latest"
+    "fake2": "latest",
+    "readable-stream": "^1.0.27-1"
   }
 }
