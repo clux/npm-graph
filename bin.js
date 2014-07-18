@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var graph = require('./npm-graph')
+var graph = require('./').analyze
   , argv = require('minimist')(process.argv.slice(2))
   , path = require('path')
   , fs = require('fs')
