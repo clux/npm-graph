@@ -77,7 +77,7 @@ writable.js
 The mutual file inclusions would normally cause a recursion overflow when generating the tree if we hadn't first found the [strongly connected components](https://npmjs.org/package/strongly-connected-components) in the inclusion digraph and manually broken the cycle.
 
 ```
-•_•)
+( •_•)
 ( •_•)>⌐■-■
 (⌐■_■)
 ```
