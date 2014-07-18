@@ -1,3 +1,10 @@
+0.4.0 / 2014-07-18
+==================
+  * do cycle analysis on the digraph given by module-deps
+  * cyclical dependencies now detected and highlighted in the output tree
+  * `-c` flag for raw cycles from Tarjan's algorithm
+  * bump dependencies
+
 0.3.3 / 2014-02-09
 ==================
   * module-deps upgraded to `1.5.0`

@@ -2,10 +2,10 @@ var graph = require('../').analyze;
 var join = require('path').join;
 
 exports.packages = function (t) {
-  graph(join(__dirname, 'fake-package', 'index.js'), 'fake-package', function (err, str) {
+  graph(join(__dirname, 'fake-package', 'index.js'), 'fp', function (err, str) {
     t.ok(!err, 'worked');
     t.deepEqual(str.split('\n'), [
-        "fake-package",
+        "fp",
         " └──fake2"
       ],
       "fake-package deps"
@@ -50,4 +50,53 @@ exports.entryPoint = function (t) {
     );
     t.done();
   }, { showLocal: true });
+};
+
+exports.cycleModule = function (t) {
+  var writableEntry = join(
+    __dirname,
+    'fake-package',
+    'node_modules',
+    'readable-stream',
+    'writable.js'
+  );
+  graph(writableEntry, 'writable.js', function (err, str) {
+    t.ok(!err, 'worked');
+    t.deepEqual(str.split('\n'), [
+      "writable.js",
+      " └─┬./lib/_stream_writable.js",
+      "   ├─┬./_stream_duplex ↪ ./_stream_writable",
+      "   │ ├─┬./_stream_readable",
+      "   │ │ ├──core-util-is",
+      "   │ │ ├──inherits",
+      "   │ │ ├──isarray",
+      "   │ │ └──string_decoder/",
+      "   │ ├──core-util-is",
+      "   │ └──inherits",
+      "   ├──core-util-is",
+      "   └──inherits"
+    ], "cycle indicated");
+    t.done();
+  }, { showLocal: true });
+};
+
+exports.cycleModuleCycles = function (t) {
+  var writableEntry = join(
+    __dirname,
+    'fake-package',
+    'node_modules',
+    'readable-stream',
+    'writable.js'
+  );
+  graph(writableEntry, 'writable.js', function (err, str) {
+    t.ok(!err, 'worked');
+    var out = str.split('\n').map(function (s) {
+      return s.match(/\/readable\-stream\/(.*)/)[1];
+    });
+    t.deepEqual(out, [
+      "lib/_stream_writable.js\'\u001b[39m,",
+      "lib/_stream_duplex.js\'\u001b[39m ] ]"
+    ], "cycle indicated");
+    t.done();
+  }, { showLocal: true, showCycles: true });
 };

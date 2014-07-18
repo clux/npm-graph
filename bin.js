@@ -6,6 +6,12 @@ var graph = require('./').analyze
   , dir = path.join(process.cwd(), argv._[0] || '.')
   , name, file;
 
+var opts = {
+  showLocal: Boolean(argv.l),
+  showBuiltins: Boolean(argv.b),
+  showCycles: Boolean(argv.c)
+};
+
 // resolve entry point dynamically
 if (path.extname(dir) === '.js') { // either we got the specific entry point
   file = dir;
@@ -29,4 +35,4 @@ graph(file, name, function (err, str) {
     throw err;
   }
   console.log(str);
-}, { showLocal: Boolean(argv.l), showBuiltins: Boolean(argv.b) });
+}, opts);
