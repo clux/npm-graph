@@ -116,15 +116,14 @@ exports.cycle = function (t) {
   });
 
   // break cycles
-  cycle.trimWhileCycles(modules);
+  var trimOutput = cycle.trimWhileCycles(modules);
   var trimmed = cycle.detect(modules);
+  t.deepEqual(trimOutput.cycles, expected.cycles, "trimWhileCycles returns original cycles");
 
   // verify that we only removed one element from the cycle (and this was sufficient)
   t.deepEqual(trimmed.cycles, [], "no cycles anymore");
   t.equal(modules[offender].length, 4, 'should be one less now');
   t.deepEqual(offendersDepsCut, modules[offender], 'one less dep now');
-
-
 
   t.done();
 };
