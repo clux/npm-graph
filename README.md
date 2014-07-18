@@ -7,8 +7,10 @@
 
 Essentially `npm ls` with two modifications:
 
-- only listing dependencies that are explicitly required
-- highlights cyclical dependencies
+- only explicitly required dependencies
+- finds cyclical requires
+
+Dependencies are analyzed using parts of the browserify toolchain.
 
 ## Usage
 Install globally and give it a path to a _local_ package or a file:
@@ -42,7 +44,7 @@ irc-stream
 This can give some at a glance information about how browserifiable the module is.
 
 ### show local files
-File by file inclusion (a requirement for cycle detection):
+File by file inclusion:
 
 ```
 $ npm-graph node_modules/irc-stream/ -l
@@ -72,7 +74,13 @@ writable.js
    └──inherits
 ```
 
-The mutual file inclusions would normally cause a recursion overflow when generating the tree if we hadn't first found the [strongly connected components](https://npmjs.org/package/strongly-connected-components) in the inclusion digraph and manually broken the cycle. Thank you mathematics.
+The mutual file inclusions would normally cause a recursion overflow when generating the tree if we hadn't first found the [strongly connected components](https://npmjs.org/package/strongly-connected-components) in the inclusion digraph and manually broken the cycle.
+
+```
+•_•)
+( •_•)>⌐■-■
+(⌐■_■)
+```
 
 The cyclical components from Tarjan's algorithm are also available with `-c`:
 
