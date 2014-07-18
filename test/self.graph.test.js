@@ -1,4 +1,4 @@
-var graph = require('../');
+var graph = require('../').analyze;
 var join = require('path').join;
 
 exports.packages = function (t) {
