@@ -106,5 +106,25 @@ exports.cycle = function (t) {
   t.deepEqual(output.indexes, expected.indexes, "it indexed correctly");
   t.deepEqual(output.adjacency, expected.adjacency, "it created adjacency list");
   t.deepEqual(output.cycles, expected.cycles, "it found one cycle");
+
+  // how we expect cycle breaking to happen
+  var offender = 'md/__nm__/readable-stream/lib/_stream_writable.js';
+  var cut = 'md/__nm__/readable-stream/lib/_stream_duplex.js';
+  t.equal(modules[offender].length, 5, 'originally 5 deps for offender');
+  var offendersDepsCut = modules[offender].filter(function (dep) {
+    return dep.path !== cut;
+  });
+
+  // break cycles
+  cycle.trimWhileCycles(modules);
+  var trimmed = cycle.detect(modules);
+
+  // verify that we only removed one element from the cycle (and this was sufficient)
+  t.deepEqual(trimmed.cycles, [], "no cycles anymore");
+  t.equal(modules[offender].length, 4, 'should be one less now');
+  t.deepEqual(offendersDepsCut, modules[offender], 'one less dep now');
+
+
+
   t.done();
 };
