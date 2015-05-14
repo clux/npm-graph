@@ -1,3 +1,8 @@
+0.5.0 / 2014-XX-XX
+==================
+  * Change CLI library to yargs and unit test the cli bits better
+  * Remove colored output from cycle output (-c)
+
 0.4.0 / 2014-07-18
 ==================
   * do cycle analysis on the digraph given by module-deps

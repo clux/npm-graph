@@ -91,11 +91,12 @@ exports.cycleModuleCycles = function (t) {
   graph(writableEntry, 'writable.js', function (err, str) {
     t.ok(!err, 'worked');
     var out = str.split('\n').map(function (s) {
+      // remove start of that absolute path string
       return s.match(/\/readable\-stream\/(.*)/)[1];
     });
     t.deepEqual(out, [
-      "lib/_stream_writable.js\'\u001b[39m,",
-      "lib/_stream_duplex.js\'\u001b[39m ] ]"
+      "lib/_stream_writable.js',",
+      "lib/_stream_duplex.js' ] ]"
     ], "cycle indicated");
     t.done();
   }, { showLocal: true, showCycles: true });

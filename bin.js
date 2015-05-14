@@ -1,38 +1,26 @@
 #!/usr/bin/env node
-var graph = require('./').analyze
-  , argv = require('minimist')(process.argv.slice(2))
-  , path = require('path')
-  , fs = require('fs')
-  , dir = path.join(process.cwd(), argv._[0] || '.')
-  , name, file;
+var argv = require('yargs')
+  .usage('Usage: npm-graph <entryPoint> [options]')
+  .example('npm-graph')
+  .example('npm-graph node_modules/yargs')
+  .example('npm-graph cli.js')
+  .alias('l', 'locals')
+  .describe('l', 'Show local file requires')
+  .boolean('l')
+  .alias('b', 'builtins')
+  .describe('b', 'Show built in modules')
+  .boolean('b')
+  .alias('c', 'cycles')
+  .describe('c', 'Show cycles')
+  .help('h', 'help')
+  .help('h')
+  .argv;
 
-var opts = {
-  showLocal: Boolean(argv.l),
-  showBuiltins: Boolean(argv.b),
-  showCycles: Boolean(argv.c)
-};
-
-// resolve entry point dynamically
-if (path.extname(dir) === '.js') { // either we got the specific entry point
-  file = dir;
-  name = path.basename(dir);
-}
-else { // or we got a directory which we try to infer the entry point of
-  var pkg = require(path.join(dir, 'package.json'));
-  name = pkg.name;
-  var entry = pkg.main || 'index.js';
-
-  if (!fs.existsSync(path.join(dir, entry))) {
-    var reason = "Failed to find the entry point of " + name;
-    reason += " - try specifying it directly";
-    throw new Error(reason);
-  }
-  file = path.join(dir, entry);
-}
-
-graph(file, name, function (err, str) {
+require('./').cli(argv, function (err, result) {
   if (err) {
-    throw err;
+    console.error(err.message);
+    process.exit(1);
   }
-  console.log(str);
-}, opts);
+  console.log(result);
+  process.exit(0);
+});
