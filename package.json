@@ -3,7 +3,6 @@
   "description": "Prints a dependency graph of modules that is actually required",
   "author": "Eirik Albrigtsen <analsandblaster@gmail.com>",
   "version": "0.4.0",
-  "stability": "unstable",
   "repository": {
     "type": "git",
     "url": "clux/npm-graph"
@@ -17,8 +16,8 @@
   "main": "index.js",
   "bin": "bin.js",
   "scripts": {
-    "test": "$(npm bin)/nodeunit --reporter=verbose test/*.js",
-    "coveralls": "$(npm bin)/jscoverage lib && NPM_GRAPH_COV=1 $(npm bin)/nodeunit --reporter=lcov test | $(npm bin)/coveralls"
+    "test": "nodeunit --reporter=verbose test/*.js",
+    "coveralls": "jscoverage lib && NPM_GRAPH_COV=1 nodeunit --reporter=lcov test | coveralls"
   },
   "dependencies": {
     "minimist": "^0.2.0",
