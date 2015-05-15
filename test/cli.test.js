@@ -77,3 +77,13 @@ exports.missingFailed = function (t) {
     t.done();
   });
 };
+
+exports.missingIgnored = function (t) {
+  var argv = { _ : [ join('test', 'bad-refs') ], 'i': ['uninstalled-dep'] };
+  cli(argv, function (err, str) {
+    t.ok(!err, "no error");
+    t.ok(str, "got result");
+    t.equal(str.split('\n').join(''), 'bad-refs └──uninstalled-dep', 'result');
+    t.done();
+  });
+};
