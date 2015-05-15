@@ -1,4 +1,4 @@
-0.5.0 / 2014-05-XX
+0.5.0 / 2014-05-15
 ==================
   * Change CLI library to yargs and unit test the cli bits better
   * Remove colored output from cycle output (-c)
@@ -6,6 +6,9 @@
   * Can now ignore missing dependencies with `--skip` #6
     - note that `-cov` requires are (still) ignored regardless
     - without `--skip`, first missing entry will halt the process
+  * Can now ignore traversing the tree of specific modules with `--ignore` #8
+    - will avoid populating huge dependency trees from specific modules
+    - currently slightly inconsistent #9
 
 0.4.0 / 2014-07-18
 ==================
