@@ -1,0 +1,10 @@
+{
+  "name": "bad-refs",
+  "version": "0.0.0",
+  "description": "A fake package with missing local references",
+  "main": "index.js",
+  "private": true,
+  "optionalDependencies": {
+    "uninstalled-dep": "latest"
+  }
+}

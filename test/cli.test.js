@@ -58,4 +58,22 @@ exports.cycle = function (t) {
   });
 };
 
+exports.missing = function (t) {
+  var argv = { _ : [ join('test', 'bad-refs') ], s: true };
+  cli(argv, function (err, str) {
+    t.ok(!err, "no error");
+    t.ok(str, "got result");
+    t.equal(str.split('\n').join(''), 'bad-refs └──uninstalled-dep', 'result');
+    t.done();
+  });
+};
 
+exports.missingFailed = function (t) {
+  var argv = { _ : [ join('test', 'bad-refs') ] };
+  cli(argv, function (err, str) {
+    t.ok(err, 'should fail');
+    t.ok(err.message.indexOf('uninstalled-dep') >= 0, 'missing dep');
+    t.ok(!str, 'no result');
+    t.done();
+  });
+};

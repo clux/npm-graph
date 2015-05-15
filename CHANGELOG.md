@@ -1,7 +1,11 @@
-0.5.0 / 2014-XX-XX
+0.5.0 / 2014-05-XX
 ==================
   * Change CLI library to yargs and unit test the cli bits better
   * Remove colored output from cycle output (-c)
+  * module-deps upgraded to `3.7.12` (big change)
+  * Can now ignore missing dependencies with `--skip` #6
+    - note that `-cov` requires are (still) ignored regardless
+    - without `--skip`, first missing entry will halt the process
 
 0.4.0 / 2014-07-18
 ==================
