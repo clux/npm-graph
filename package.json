@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "minimist": "^0.2.0",
-    "module-deps": "^2.1.5",
+    "module-deps": "^3.7.12",
     "strongly-connected-components": "^1.0.1",
     "topiary": "^1.1.1",
     "yargs": "^3.9.0"
