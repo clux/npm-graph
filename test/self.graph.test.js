@@ -101,3 +101,15 @@ exports.cycleModuleCycles = function (t) {
     t.done();
   }, { showLocal: true, showCycles: true });
 };
+
+exports.jsonIncludes = function (t) {
+  // TODO: this SHOULD work without ignoreMissing
+  // but currently the default module-deps resolver (browser-resolve)
+  // does not handle json includes without the extension in the require
+  // the same goes for the resolve package which is the nodey thing
+  graph(join(__dirname, 'json-includes', 'index.js'), 'ji', function (err, str) {
+    t.ok(!err, 'worked');
+    t.deepEqual(str.split('\n'), ["ji"], "json-includes deps");
+    t.done();
+  }, { ignoreMissing: true });
+};

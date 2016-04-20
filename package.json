@@ -17,18 +17,17 @@
   "bin": "bin.js",
   "scripts": {
     "test": "nodeunit --reporter=verbose test/*.js",
-    "coveralls": "jscoverage lib && NPM_GRAPH_COV=1 nodeunit --reporter=lcov test | coveralls"
+    "coverage": "jscoverage lib && NPM_GRAPH_COV=1 nodeunit --reporter=lcov test"
   },
   "dependencies": {
-    "module-deps": "^3.7.12",
+    "module-deps": "^4.0.5",
     "strongly-connected-components": "^1.0.1",
     "topiary": "^1.1.1",
     "yargs": "^3.9.0"
   },
   "devDependencies": {
     "nodeunit": "~0.9.0",
-    "jscoverage": "~0.5.4",
-    "coveralls": "~2.11.1"
+    "jscoverage": "~0.5.4"
   },
   "bugs": {
     "url": "http://github.com/clux/npm-graph/issues"
