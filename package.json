@@ -1,7 +1,7 @@
 {
   "name": "npm-graph",
   "description": "Prints a dependency graph of modules that is actually required",
-  "author": "Eirik Albrigtsen <analsandblaster@gmail.com>",
+  "author": "Eirik Albrigtsen <sszynrae@gmail.com>",
   "version": "0.5.0",
   "repository": {
     "type": "git",
